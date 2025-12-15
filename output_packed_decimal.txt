@@ -1,0 +1,21 @@
+Encoding: Packed Decimal (BCD)
+------------------------------------------------------------
+Char | ASCII | Digits | Packed Bytes (hex)
+------------------------------------------------------------
+  h  |  104  |   104  | 0x10 0x4f
+  e  |  101  |   101  | 0x10 0x1f
+  l  |  108  |   108  | 0x10 0x8f
+  l  |  108  |   108  | 0x10 0x8f
+  o  |  111  |   111  | 0x11 0x1f
+------------------------------------------------------------
+Total bytes: 10
+Hex dump: 104f101f108f108f111f
+
+============================================================
+Format explanation:
+- Each ASCII value is converted to decimal digits
+- Each digit is stored in 4 bits (nibble)
+- Two nibbles packed per byte
+- 0xF = unsigned sign nibble at end
+- Example: 'h'=104 -> digits '104' -> nibbles [0,1,0,4,F]
+          -> packed as 0x01, 0x04f (bytes: 0x01 0x4f)
