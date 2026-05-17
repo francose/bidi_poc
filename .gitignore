@@ -1,0 +1,19 @@
+# Generated PoC outputs
+output_*.txt
+out/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
