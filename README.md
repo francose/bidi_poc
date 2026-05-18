@@ -30,6 +30,12 @@ python pocs/99_detect_bidi.py samples/
 
 # Self-test the scanner
 python pocs/99_detect_bidi.py --self-test
+
+# Operator-side: spray encoded payload variants
+python tools/encode_payload.py "<script>alert(1)</script>" --only url2,html-dec
+
+# Generate phishing-relevant lookalikes for a domain
+python tools/lookalike_domain.py paypal.com --only homograph,typo-omit
 ```
 
 No external dependencies — Python 3.10+ stdlib only.
@@ -54,6 +60,19 @@ No external dependencies — Python 3.10+ stdlib only.
   - `07_packed_decimal_attacks.md`
   - `08_double_encoding.md`
   - `09_bidi_trojan_source.md`
+
+### Operator tools (red-team / authorized testing)
+
+| Script | Output |
+|--------|--------|
+| `tools/encode_payload.py`     | Payload encoding spray — 13 variant families (url/url2/url3, html-dec, html-hex, unicode-esc, hex-esc, overlong UTF-8, null-suffix, bidi-wrap, space-tab, mixed-case, base64). One line per variant, pipe straight into Burp Intruder / `ffuf -w -` / `wfuzz`. |
+| `tools/lookalike_domain.py`   | Phishing domain generator — homograph, typo (omit/swap/double/replace), TLD swap, bitsquat, hyphenate. Emits punycode/IDNA form for each non-ASCII candidate. CSV mode for tracking. |
+| `tools/filename_bypass.py`    | File-upload allowlist bypass — null-byte (`\x00`, `%00`, `%2500`), multi-extension (Apache mod_mime), trailing dot/space (Windows), Unicode dot lookalikes, overlong UTF-8 dot, bidi-reversed extension. |
+| `tools/bidi_inject.py`        | Source-code planter — `comment-veil` mode hides executable code behind a fake C-style `/* comment */`; `string-stretch` mode hides extra content inside a string literal. For supply-chain / code-review evasion research. |
+| `tools/typosquat_package.py`  | Package-name typosquat generator (PyPI / npm / RubyGems / crates). Optional live registry probe (`--check pypi`) reports availability per candidate. |
+
+All tools are stdlib-only, single-file, designed for piping. Use with
+authorization — same MIT/disclaimer terms as the rest of the repo.
 
 ### Runnable PoCs
 
